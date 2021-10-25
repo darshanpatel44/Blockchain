@@ -35,6 +35,7 @@ class Block:
 
         self.hash = SHA256(hash_str)
 
+
     def mine(self):
         prefix_str = '0'*PREFIX_ZEROES
         for nonce in range(MAX_NONCE):
