@@ -22,6 +22,7 @@ class Block:
 
         self.idx = id
         self.block_no = str(id)
+        self.block
         self.nonce = 4444
         self.data = ""
         self.hash = ""
@@ -89,7 +90,7 @@ def single_block(obj):
     # st.write(f"""**Previous Hash:** {obj.prev}""")
     st.success(obj.idx)
     obj.block_no = st.text_input(
-        "Block #:", obj.block_no, on_change=touch, args=(obj,), key=f'block_no{obj.idx}')
+        "Block #:", obj.block_no, on_change=touch, args=(obj,), key=f'block_no{obj}')
 
     obj.nonce = st.text_input(
         "Nonce:", obj.nonce, on_change=touch, args=(obj,), key=f'nonce{obj.idx}')
@@ -133,4 +134,4 @@ def main_blockchain():
         single_block(chain[i])
 
     st.sidebar.write(f"Total Blocks: {len(chain)}")
-    st.sidebar.button("Add New Block", on_click=addNewBlock)
+    st.sidebar.button("Add New Block", on_click=add

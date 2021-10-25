@@ -21,7 +21,6 @@ class Block:
         self.flag = False
 
     def mine(self):
-        # obj = st.session_state.obj
         prefix_str = '0'*PREFIX_ZEROES
         for nonce in range(MAX_NONCE):
             text = self.block_no + \
