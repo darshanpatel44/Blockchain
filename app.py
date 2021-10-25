@@ -1,12 +1,13 @@
 import streamlit as st
 import hashlib
 import os
-from blockClass import Block, mine, block
+from blockClass import main_block
+from blockchain import main_blockchain
 from hash import main_hash
 
 st.set_page_config(
     page_title="Blockchain Visualization",
-    page_icon="blockchain.png",
+    page_icon="sha.png",
 )
 
 
@@ -18,7 +19,8 @@ def app():
 
     choice = st.sidebar.radio(
         "",
-        ("Hash", "Block", "Blockchain", "Distributed Blockchain", "Tokens")
+        # ("Hash", "Block", "Blockchain", "Distributed Blockchain", "Tokens")
+        ("Blockchain", "Block", "Hash", "Distributed Blockchain", "Tokens")
     )
 
     if choice == "Hash":
@@ -31,10 +33,12 @@ def app():
         # st.info(result)
 
     if choice == "Block":
-        block(st.session_state.obj)
+        main_block()
 
     if choice == "Blockchain":
         st.subheader('Blockchain')
+        main_blockchain()
+
     if choice == "Distributed Blockchain":
         st.subheader('Distributed Blockchain')
     if choice == "Tokens":
@@ -49,8 +53,5 @@ def app():
 
 
 if __name__ == "__main__":
-    if 'obj' not in st.session_state:
-        st.session_state.obj = Block()
-        mine(4)
 
     app()

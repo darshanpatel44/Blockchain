@@ -20,21 +20,22 @@ class Block:
         self.hash_str = ""
         self.flag = False
 
-def mine(zeroes):
-    obj = st.session_state.obj
-    prefix_str = '0'*zeroes
-    for nonce in range(500000):
-        text = obj.block_no + obj.nonce + obj.data
-        text
-        hashh = SHA256(text)
-        if hashh.startswith(prefix_str):
-            # st.warning(hashh)
-            obj.nonce = str(nonce)
-            obj.hash = hashh
+    def mine(self):
+        # obj = st.session_state.obj
+        prefix_str = '0'*PREFIX_ZEROES
+        for nonce in range(MAX_NONCE):
+            text = self.block_no + \
+                str(nonce) + self.data
+            hashh = SHA256(text)
+            # text
+            if hashh.startswith(prefix_str):
+                self.nonce = str(nonce)
+                self.hash = hashh
+                return
 
 
 def update_val(obj):
-    mine(PREFIX_ZEROES)
+    obj.mine()
     obj.flag = False
 
 
@@ -42,9 +43,10 @@ def touch(obj):
     obj.flag = True
 
 
-def block(obj):
-    # obj = st.session_state.obj
-    st.session_state.obj
+def block():
+
+    obj = st.session_state.block
+    # st.session_state.obj
     obj.block_no = st.text_input(
         "Block #:", obj.block_no, on_change=touch, args=(obj,))
     obj.nonce = st.text_input(
@@ -65,15 +67,18 @@ def block(obj):
 
     st.button("Mine", on_click=update_val, args=(obj,))
 
-    st.session_state.obj.block_no
-    st.session_state.obj.nonce
-    st.session_state.obj.data
-    st.session_state.obj.hash_str
+    # st.session_state.obj.block_no
+    # st.session_state.obj.nonce
+    # st.session_state.obj.data
+    # st.session_state.obj.hash_str
 
 
-# def main_block():
-#     block()
+def main_block():
+    if 'block' not in st.session_state:
+        st.session_state.block = Block()
+        st.session_state.block.mine()
+    block()
 
 
 if __name__ == "__main__":
-    app()
+    main_block()
