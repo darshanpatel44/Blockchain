@@ -20,9 +20,6 @@ class Block:
         self.hash_str = ""
         self.flag = False
 
-dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
-dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
-
 def mine(zeroes):
     obj = st.session_state.obj
     prefix_str = '0'*zeroes
