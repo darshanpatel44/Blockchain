@@ -21,18 +21,18 @@ class Block:
     def __init__(self, prev, id):
 
         self.idx = id
-        self.block_no = str(id)
+        self.block_no = str(self.idx)
         self.nonce = 4444
         self.data = ""
         self.hash = ""
-        self.hash_str = ""
         self.prev = prev
         self.flag = False
         self.mine()
 
     def UpdateHash(self):
+        
         hash_str = self.block_no + str(self.nonce) + str(self.data) + str(self.prev)
-
+        st.success(hash_str)
         self.hash = SHA256(hash_str)
 
 
@@ -63,17 +63,12 @@ class Block:
 
     def single_block(self):
 
-        # annotated_text(
-        #     ("NEW BLOCK", "", "#8ef"),)
-        # st.write(f"""**Block #{obj.block_no} :**""")
-        # st.write(f"""**Nonce:** {obj.nonce}""")
-        # st.write(f"""**Hash:** {obj.hash}""")
-        # st.write(f"""**Data:** {obj.data}""")
-        # st.write(f"""**Previous Hash:** {obj.prev}""")
+
         st.success(self.idx)
         self.block_no = st.text_input(
-            "Block #:", self.idx, on_change=touch, args=(self,), key=f'block_no{self.idx}')
+            "Block #:", self.block_no, on_change=touch, args=(self,), key=f'block_no{self.idx}')
 
+        # st.success(self.block_no)
         self.nonce = st.text_input(
             "Nonce:", self.nonce, on_change=touch, args=(self,), key=f'nonce{self.idx}')
 
@@ -86,6 +81,7 @@ class Block:
         # self.hash = st.text_input("Hash:", self.hash)
 
         self.UpdateHash()
+        # st.success(self.block_no)
 
         st.write("Hash:")
         if self.flag:
@@ -93,7 +89,7 @@ class Block:
         else:
             st.success(self.hash)
 
-        self.block_no = str(int(self.block_no)+1)
+    
         st.markdown("""
         ***
         """)
@@ -120,10 +116,6 @@ def touch(obj):
 
 
 def main_blockchain():
-    # if 'id' not in st.session_state:
-    #     st.session_state.id = 0
-    #     st.write("kjsahkdjhashdkhkaskjdhkahskjd")
-    #     st.session_state.id
 
     if "chain" not in st.session_state:
         st.session_state.chain = {}
