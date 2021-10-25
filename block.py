@@ -2,11 +2,36 @@ import streamlit as st
 import hashlib
 import os
 
-
-
-
-
+PREFIX_ZEROES=4
 MAX_NONCE = 500000     
+
+class Block:
+
+    def __init__():
+        self.block_no='1'
+        self.nonce='4444'
+        self.data=""
+        self.hash=""
+        self.hash_str=""
+        self.flag=False
+
+        self.nonce,self.hash=self.mine(PREFIX_ZEROES)
+
+    def mine(self,PREFIX_ZEROES):
+        prefix_str='0'*PREFIX_ZEROES
+
+        for nonc in range(MAX_NONCE):
+            text= self.block_no+ self.nonce + self.data 
+            hashh = SHA256(text)
+
+            if hashh.startswith(prefix_str):
+                return str(nonce),hashh
+
+
+
+
+
+
 def mine(block_number,transaction,prefix_zeros):
     prefix_str='0'*prefix_zeros
     for nonce in range(MAX_NONCE):
@@ -40,8 +65,6 @@ def get_var():
     if "flag" not in st.session_state:
         st.session_state.flag = False
     
-    if "button" not in st.session_state:
-        st.session_state.button = False
 
 def touch():
     st.session_state.flag = True
