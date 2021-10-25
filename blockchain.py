@@ -31,8 +31,7 @@ class Block:
         self.mine()
 
     def UpdateHash(self):
-        hash_str = self.block_no + str(self.nonce) + \
-        str(self.data) + str(self.prev)
+        hash_str = self.block_no + str(self.nonce) + str(self.data) + str(self.prev)
 
         self.hash = SHA256(hash_str)
 
