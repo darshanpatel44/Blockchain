@@ -1,6 +1,6 @@
 import streamlit as st
 import hashlib
-from annotated_text import annotated_text
+
 from streamlit.legacy_caching.caching import clear_cache
 
 PREFIX_ZEROES = 4
@@ -21,19 +21,18 @@ class Block:
     def __init__(self, prev, id):
 
         self.idx = id
-        self.block_no = str(id)
-        self.block_no
+        self.block_no = str(self.idx)
         self.nonce = 4444
         self.data = ""
         self.hash = ""
-        self.hash_str = ""
         self.prev = prev
         self.flag = False
         self.mine()
 
     def UpdateHash(self):
+        
         hash_str = self.block_no + str(self.nonce) + str(self.data) + str(self.prev)
-
+        st.success(hash_str)
         self.hash = SHA256(hash_str)
 
 
@@ -62,6 +61,41 @@ class Block:
         return
 
 
+    def single_block(self):
+
+
+        st.success(self.idx)
+        self.block_no = st.text_input(
+            "Block #:", self.block_no, on_change=touch, args=(self,), key=f'block_no{self.idx}')
+
+        # st.success(self.block_no)
+        self.nonce = st.text_input(
+            "Nonce:", self.nonce, on_change=touch, args=(self,), key=f'nonce{self.idx}')
+
+        self.data = st.text_area("Data:", self.data, on_change=touch, args=(
+            self,), key=f'data{self.idx}')
+
+        st.write("Prev:")
+        st.info(self.prev)
+        # st.text_input("Prev:", self.prev, key="prev_hash")
+        # self.hash = st.text_input("Hash:", self.hash)
+
+        self.UpdateHash()
+        # st.success(self.block_no)
+
+        st.write("Hash:")
+        if self.flag:
+            st.error(self.hash)
+        else:
+            st.success(self.hash)
+
+    
+        st.markdown("""
+        ***
+        """)
+
+
+
 def addNewBlock():
 
     chain = st.session_state.chain
@@ -79,49 +113,9 @@ def touch(obj):
     obj.flag = True
 
 
-def single_block(obj):
-
-    # annotated_text(
-    #     ("NEW BLOCK", "", "#8ef"),)
-    # st.write(f"""**Block #{obj.block_no} :**""")
-    # st.write(f"""**Nonce:** {obj.nonce}""")
-    # st.write(f"""**Hash:** {obj.hash}""")
-    # st.write(f"""**Data:** {obj.data}""")
-    # st.write(f"""**Previous Hash:** {obj.prev}""")
-    st.success(obj.idx)
-    obj.block_no = st.text_input(
-        "Block #:", obj.block_no, on_change=touch, args=(obj,), key=f'block_no{obj}')
-
-    obj.nonce = st.text_input(
-        "Nonce:", obj.nonce, on_change=touch, args=(obj,), key=f'nonce{obj.idx}')
-
-    obj.data = st.text_area("Data:", obj.data, on_change=touch, args=(
-        obj,), key=f'data{obj.idx}')
-
-    st.write("Prev:")
-    st.info(obj.prev)
-    # st.text_input("Prev:", obj.prev, key="prev_hash")
-    # obj.hash = st.text_input("Hash:", obj.hash)
-
-    obj.UpdateHash()
-
-    st.write("Hash:")
-    if obj.flag:
-        st.error(obj.hash)
-    else:
-        st.success(obj.hash)
-
-    obj.block_no = str(int(obj.block_no)+1)
-    st.markdown("""
-    ***
-    """)
 
 
 def main_blockchain():
-    # if 'id' not in st.session_state:
-    #     st.session_state.id = 0
-    #     st.write("kjsahkdjhashdkhkaskjdhkahskjd")
-    #     st.session_state.id
 
     if "chain" not in st.session_state:
         st.session_state.chain = {}
@@ -131,7 +125,7 @@ def main_blockchain():
     chain = st.session_state.chain
 
     for i in range(1, len(chain)+1):
-        single_block(chain[i])
+        chain[i].single_block()
 
     st.sidebar.write(f"Total Blocks: {len(chain)}")
     st.sidebar.button("Add New Block", on_click=addNewBlock)
