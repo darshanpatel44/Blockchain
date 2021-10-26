@@ -3,6 +3,7 @@ import hashlib
 import os
 from blockClass import main_block
 from blockchain import main_blockchain
+from distributed import main_distributed
 from hash import main_hash
 
 st.set_page_config(
@@ -12,31 +13,42 @@ st.set_page_config(
 
 
 def app():
-    st.title('Blockchain Demo')
-    st.markdown("""
-    ***
-    """)
+    # st.title('Blockchain Demo')
+    # st.markdown("""
+    # ***
+    # """)
 
     choice = st.sidebar.radio(
         "",
         # ("Hash", "Block", "Blockchain", "Distributed Blockchain", "Tokens")
-        ("Blockchain", "Block", "Hash", "Distributed Blockchain", "Tokens")
+        ("Distributed Blockchain", "Block", "Hash", "Blockchain", "Tokens")
     )
-
+    st.sidebar.markdown("""
+    ***
+    """)
     if choice == "Hash":
+        st.title('SHA256 Hash')
+        st.markdown("""***""")
         main_hash()
 
     if choice == "Block":
+        st.title('Block')
+        st.markdown("""***""")
         main_block()
 
     if choice == "Blockchain":
-        st.subheader('Blockchain')
+        st.title('Blockchain')
+        st.markdown("""***""")
         main_blockchain()
 
     if choice == "Distributed Blockchain":
-        st.subheader('Distributed Blockchain')
+        st.title('Distributed Blockchain')
+        st.markdown("""***""")
+        main_distributed()
+
     if choice == "Tokens":
-        st.subheader('Tokens')
+        st.title('Tokens')
+        st.markdown("""***""")
 
     hide_st_style = """
             <style>

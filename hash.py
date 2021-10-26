@@ -7,7 +7,7 @@ def SHA256(text):
 
 
 def main_hash():
-    st.subheader('SHA256 Hash')
+    # st.subheader('SHA256 Hash')
     txt = st.text_area('Data:', '''''')
     result = SHA256(txt)
     st.text("Hash:")
