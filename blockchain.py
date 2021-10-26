@@ -22,7 +22,7 @@ class Block:
 
         self.idx = id
         self.block_no = str(id)
-        self.block
+        self.block_no
         self.nonce = 4444
         self.data = ""
         self.hash = ""
@@ -134,4 +134,4 @@ def main_blockchain():
         single_block(chain[i])
 
     st.sidebar.write(f"Total Blocks: {len(chain)}")
-    st.sidebar.button("Add New Block", on_click=add
+    st.sidebar.button("Add New Block", on_click=addNewBlock)
