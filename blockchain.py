@@ -30,11 +30,10 @@ class Block:
         self.mine()
 
     def UpdateHash(self):
-        
-        hash_str = self.block_no + str(self.nonce) + str(self.data) + str(self.prev)
-        st.success(hash_str)
-        self.hash = SHA256(hash_str)
 
+        hash_str = self.block_no + \
+            str(self.nonce) + str(self.data) + str(self.prev)
+        self.hash = SHA256(hash_str)
 
     def mine(self):
         prefix_str = '0'*PREFIX_ZEROES
@@ -60,15 +59,11 @@ class Block:
 
         return
 
-
     def single_block(self):
 
-
-        st.success(self.idx)
         self.block_no = st.text_input(
             "Block #:", self.block_no, on_change=touch, args=(self,), key=f'block_no{self.idx}')
 
-        # st.success(self.block_no)
         self.nonce = st.text_input(
             "Nonce:", self.nonce, on_change=touch, args=(self,), key=f'nonce{self.idx}')
 
@@ -77,11 +72,8 @@ class Block:
 
         st.write("Prev:")
         st.info(self.prev)
-        # st.text_input("Prev:", self.prev, key="prev_hash")
-        # self.hash = st.text_input("Hash:", self.hash)
 
         self.UpdateHash()
-        # st.success(self.block_no)
 
         st.write("Hash:")
         if self.flag:
@@ -89,30 +81,22 @@ class Block:
         else:
             st.success(self.hash)
 
-    
         st.markdown("""
         ***
         """)
 
 
-
 def addNewBlock():
 
     chain = st.session_state.chain
-
     last_mined_block = chain[len(chain)]
-
     new_block = Block(last_mined_block.hash, last_mined_block.idx+1)
-
     if new_block.idx not in chain:
-
         chain[new_block.idx] = new_block
 
 
 def touch(obj):
     obj.flag = True
-
-
 
 
 def main_blockchain():
