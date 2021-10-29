@@ -22,13 +22,12 @@ class Block:
         self.flag = False
 
     def mine(self):
-        # st.write("mine called")
+
         prefix_str = '0'*PREFIX_ZEROES
         for nonce in range(MAX_NONCE):
-            text = self.block_no + \
-                str(nonce) + self.data
+            text = self.block_no + str(nonce) + self.data
             hashh = SHA256(text)
-            # text
+
             if hashh.startswith(prefix_str):
                 self.nonce = str(nonce)
                 self.hash = hashh
@@ -75,8 +74,6 @@ def block():
     text = obj.block_no + obj.nonce + obj.data
     obj.hash=SHA256(text)
 
-    # if st.button('Mine'):
-    #     update_val(obj)
 
     if obj.flag:
         st.error(obj.hash)

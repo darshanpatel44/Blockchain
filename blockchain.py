@@ -24,67 +24,71 @@ class Block:
         self.block_no = str(self.idx)
         self.nonce = 4444
         self.data = ""
-        self.hash = ""
+        self.hash = {}
+        self.hash_str=""
         self.prev = prev
         self.flag = False
         self.mine()
 
+    
+    def hasChanged(self):
+
+        text = self.block_no + str(self.nonce) + str(self.data) + str(self.prev['hash'])
+
+        if text==self.hash_str:
+            self.flag=False
+
+        else:
+            self.flag=True
+
     def UpdateHash(self):
 
-        hash_str = self.block_no + \
-            str(self.nonce) + str(self.data) + str(self.prev)
-        self.hash = SHA256(hash_str)
+        hash_str = self.block_no + str(self.nonce) + str(self.data) + str(self.prev['hash'])
+        self.hash['hash'] = SHA256(hash_str)
 
     def mine(self):
         prefix_str = '0'*PREFIX_ZEROES
         for nonce in range(MAX_NONCE):
-            text = self.block_no + str(nonce) + self.data + self.prev
+            text = self.block_no + str(nonce) + self.data + self.prev['hash']
             hashh = SHA256(text)
             # text
             if hashh.startswith(prefix_str):
                 self.nonce = nonce
-                self.hash = hashh
+                self.hash['hash'] = hashh
+                self.hash_str=text
+                self.flag=False
                 break
-
-        i = self.idx+1
-
-        while i < len(st.session_state.chain):
-            st.session_state.chain[i].prev = hashh
-            st.session_state.chain[i].UpdateHash()
-            st.session_state.chain[i].flag = True
-            hashh = st.session_state.chain[i]
-
-            i += 1
-            pass
 
         return
 
     def single_block(self):
 
-        self.block_no = st.text_input(
-            "Block #:", self.block_no, on_change=touch, args=(self,), key=f'block_no{self.idx}')
+        st.text_input("Block #:", self.block_no, on_change=touch, args=(self,), key=f'block_no{self.idx}')
 
-        self.nonce = st.text_input(
-            "Nonce:", self.nonce, on_change=touch, args=(self,), key=f'nonce{self.idx}')
+        st.text_input("Nonce:", self.nonce, on_change=touch, args=(self,), key=f'nonce{self.idx}')
 
-        self.data = st.text_area("Data:", self.data, on_change=touch, args=(
-            self,), key=f'data{self.idx}')
+        st.text_area("Data:", self.data, on_change=touch, args=(self,), key=f'data{self.idx}')
 
         st.write("Prev:")
-        st.info(self.prev)
-
+        st.info(self.prev['hash'])
+        self.hasChanged()
         self.UpdateHash()
 
         st.write("Hash:")
         if self.flag:
-            st.error(self.hash)
+            st.error(self.hash['hash'])
         else:
-            st.success(self.hash)
+            st.success(self.hash['hash'])
+
+        st.button("Mine", on_click=update_val, args=(self,), key=f'button{self.idx}')
 
         st.markdown("""
         ***
         """)
 
+        
+def update_val(obj):
+    obj.mine()
 
 def addNewBlock():
 
@@ -96,15 +100,19 @@ def addNewBlock():
 
 
 def touch(obj):
-    obj.flag = True
+    obj.block_no=st.session_state[f'block_no{obj.idx}']
+    obj.nonce=st.session_state[f'nonce{obj.idx}']
+    obj.data=st.session_state[f'data{obj.idx}']
 
 
 def main_blockchain():
 
     if "chain" not in st.session_state:
         st.session_state.chain = {}
+        prev={}
+        prev['hash']='0000000000000000000000000000000000000000000000000000000000000000'
         st.session_state.chain[1] = Block(
-            '0000000000000000000000000000000000000000000000000000000000000000', 1)
+            prev, 1)
 
     chain = st.session_state.chain
 
