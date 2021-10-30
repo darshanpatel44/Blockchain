@@ -1,7 +1,6 @@
 import streamlit as st
 import hashlib
-import os
-import copy
+
 
 PREFIX_ZEROES = 4
 MAX_NONCE = 500000
@@ -48,15 +47,10 @@ class Block:
 
 
 
-def update_val(obj):
-    obj.mine()
-    # st.warning(obj.hash)
-
-
-def touch(obj):
-    obj.block_no=st.session_state.block_no
-    obj.nonce=st.session_state.nonce
-    obj.data=st.session_state.data
+    def touch(self):
+        self.block_no=st.session_state.block_no
+        self.nonce=st.session_state.nonce
+        self.data=st.session_state.data
 
 
 
@@ -65,9 +59,9 @@ def block():
 
     obj = st.session_state.block
 
-    st.text_input("Block #:",obj.block_no, key='block_no',on_change=touch,args=(obj,))
-    st.text_input("Nonce:",obj.nonce, key='nonce',on_change=touch,args=(obj,))
-    st.text_area("Data:",obj.data, key='data',on_change=touch,args=(obj,))
+    st.text_input("Block #:",obj.block_no, key='block_no',on_change=obj.touch)
+    st.text_input("Nonce:",obj.nonce, key='nonce',on_change=obj.touch)
+    st.text_area("Data:",obj.data, key='data',on_change=obj.touch)
 
 
     obj.hasChanged()
@@ -80,7 +74,7 @@ def block():
     else:
         st.success(obj.hash)
 
-    st.button("Mine", on_click=update_val, args=(obj,))
+    st.button("Mine", on_click=obj.mine)
 
     
 

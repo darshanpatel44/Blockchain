@@ -1,15 +1,13 @@
 import streamlit as st
 import hashlib
 
-from streamlit.legacy_caching.caching import clear_cache
-
 PREFIX_ZEROES = 4
 MAX_NONCE = 500000
 
 
-def local_css(file_name):
-    with open(file_name) as f:
-        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+# def local_css(file_name):
+#     with open(file_name) as f:
+#         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 
 def SHA256(text):
@@ -41,6 +39,7 @@ class Block:
         else:
             self.flag=True
 
+
     def UpdateHash(self):
 
         hash_str = self.block_no + str(self.nonce) + str(self.data) + str(self.prev['hash'])
@@ -58,16 +57,22 @@ class Block:
                 self.hash_str=text
                 self.flag=False
                 break
-
         return
+
+
+    def touch(self):
+        self.block_no=st.session_state[f'block_no{self.idx}']
+        self.nonce=st.session_state[f'nonce{self.idx}']
+        self.data=st.session_state[f'data{self.idx}']
+        
 
     def single_block(self):
 
-        st.text_input("Block #:", self.block_no, on_change=touch, args=(self,), key=f'block_no{self.idx}')
+        st.text_input("Block #:", self.block_no, on_change=self.touch, key=f'block_no{self.idx}')
 
-        st.text_input("Nonce:", self.nonce, on_change=touch, args=(self,), key=f'nonce{self.idx}')
+        st.text_input("Nonce:", self.nonce, on_change=self.touch, key=f'nonce{self.idx}')
 
-        st.text_area("Data:", self.data, on_change=touch, args=(self,), key=f'data{self.idx}')
+        st.text_area("Data:", self.data, on_change=self.touch, key=f'data{self.idx}')
 
         st.write("Prev:")
         st.info(self.prev['hash'])
@@ -80,29 +85,22 @@ class Block:
         else:
             st.success(self.hash['hash'])
 
-        st.button("Mine", on_click=update_val, args=(self,), key=f'button{self.idx}')
+        st.button("Mine", on_click=self.mine, key=f'button{self.idx}')
 
         st.markdown("""
         ***
         """)
 
-        
-def update_val(obj):
-    obj.mine()
+    @staticmethod        
+    def addNewBlock():
 
-def addNewBlock():
-
-    chain = st.session_state.chain
-    last_mined_block = chain[len(chain)]
-    new_block = Block(last_mined_block.hash, last_mined_block.idx+1)
-    if new_block.idx not in chain:
-        chain[new_block.idx] = new_block
+        chain = st.session_state.chain
+        last_mined_block = chain[len(chain)]
+        new_block = Block(last_mined_block.hash, last_mined_block.idx+1)
+        if new_block.idx not in chain:
+            chain[new_block.idx] = new_block
 
 
-def touch(obj):
-    obj.block_no=st.session_state[f'block_no{obj.idx}']
-    obj.nonce=st.session_state[f'nonce{obj.idx}']
-    obj.data=st.session_state[f'data{obj.idx}']
 
 
 def main_blockchain():
@@ -120,4 +118,4 @@ def main_blockchain():
         chain[i].single_block()
 
     st.sidebar.write(f"Total Blocks: {len(chain)}")
-    st.sidebar.button("Add New Block", on_click=addNewBlock)
+    st.sidebar.button("Add New Block", on_click=Block.addNewBlock)
