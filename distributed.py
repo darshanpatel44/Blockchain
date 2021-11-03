@@ -5,40 +5,34 @@ import hashlib
 
 class DistributedBlockchain():
 
-    chain_cntr = 0
-
     def __init__(self):
-        DistributedBlockchain.chain_cntr += 1
-        st.write('Chain #', DistributedBlockchain.chain_cntr)
-        prev = {}
-        prev['hash'] = '0000000000000000000000000000000000000000000000000000000000000000'
-        st.session_state.chain_network[DistributedBlockchain.chain_cntr] = {}
-        st.session_state.chain_network[DistributedBlockchain.chain_cntr][1] = Blockchain(
-            prev, 1)
+        self.chain={}
+        self.chain[1] = Blockchain()
+        self.total_chains=1
 
-def single_chain(chain_ptr):
+    def add_chain(self):
 
-    chain=st.session_state.chain_network[chain_ptr]
-    
-    ptr=1
-    while ptr<= len(chain):
-        chain[ptr].single_block()
-        ptr+=1
+        self.total_chains += 1
+        self.chain[self.total_chains] = Blockchain()
+
+
+# A block should be verified by all the peers before adding to the chain
 
 
 def main_distributed():
 
     
-    if 'chain_network' not in st.session_state:
+    if 'dist_blockchain' not in st.session_state:
 
         st.write('Chains not present')
-        st.session_state.chain_network = {}
+        st.session_state.dist_blockchain = DistributedBlockchain()
     else:
         st.write('Chains present')
 
-    if DistributedBlockchain.chain_cntr == 0:
-        for i in range(3):
-            DistributedBlockchain()
+    if st.session_state.dist_blockchain.total_chains == 1:
+        for i in range(2):
+            st.session_state.dist_blockchain.add_chain()
+            
 
     st.markdown("""
     <style>
@@ -58,13 +52,13 @@ def main_distributed():
 
     if peer == "Peer A":
         st.subheader("Peer A")
-        # st.session_state['chain_network'][1]
-        single_chain(1)
+        st.session_state.dist_blockchain.chain[1].render_chain()
+        
 
     elif peer == "Peer B":
         st.subheader("Peer B")
-        single_chain(2)
+        st.session_state.dist_blockchain.chain[2].render_chain()
 
     elif peer == "Peer C":
         st.subheader("Peer C")
-        single_chain(3)
+        st.session_state.dist_blockchain.chain[3].render_chain()
