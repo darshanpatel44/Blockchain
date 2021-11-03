@@ -14,7 +14,7 @@ def SHA256(text):
     return hashlib.sha256(text.encode("ascii")).hexdigest()
 
 
-class Blockchain:
+class Block:
 
     def __init__(self, prev, id):
 
@@ -91,31 +91,46 @@ class Blockchain:
         ***
         """)
 
-    @staticmethod        
-    def addNewBlock():
-
-        chain = st.session_state.chain
-        last_mined_block = chain[len(chain)]
-        new_block = Blockchain(last_mined_block.hash, last_mined_block.idx+1)
-        if new_block.idx not in chain:
-            chain[new_block.idx] = new_block
 
 
+
+class Blockchain:
+
+    chain_cntr=0
+    prev={}
+    prev['hash']='0000000000000000000000000000000000000000000000000000000000000000'
+
+    def __init__(self):
+        Blockchain.chain_cntr+=1
+        self.idx= Blockchain.chain_cntr
+        self.chain={}
+        self.chain[1]=Block(Blockchain.prev, 1)
+
+
+    def addNewBlock(self):
+        last_mined_block = self.chain[len(self.chain)]
+        new_block = Block(last_mined_block.hash, last_mined_block.idx+1)
+        if new_block.idx not in self.chain:
+            self.chain[new_block.idx] = new_block        
+
+
+    def render_chain(self):
+        
+        ptr=1
+
+        while ptr<=len(self.chain):
+            self.chain[ptr].single_block()
+            ptr+=1
 
 
 def main_blockchain():
 
     if "chain" not in st.session_state:
-        st.session_state.chain = {}
-        prev={}
-        prev['hash']='0000000000000000000000000000000000000000000000000000000000000000'
-        st.session_state.chain[1] = Blockchain(
-            prev, 1)
+        st.session_state.chain = Blockchain()
 
     chain = st.session_state.chain
 
-    for i in range(1, len(chain)+1):
-        chain[i].single_block()
+    chain.render_chain()
 
-    st.sidebar.write(f"Total Blocks: {len(chain)}")
-    st.sidebar.button("Add New Blockchain", on_click=Blockchain.addNewBlock)
+    st.sidebar.write(f"Total Blocks: {len(chain.chain)}")
+    st.sidebar.button("Add New Blockchain", on_click=chain.addNewBlock)
