@@ -14,7 +14,7 @@ def SHA256(text):
     return hashlib.sha256(text.encode("ascii")).hexdigest()
 
 
-class Block:
+class Blockchain:
 
     def __init__(self, prev, id):
 
@@ -96,7 +96,7 @@ class Block:
 
         chain = st.session_state.chain
         last_mined_block = chain[len(chain)]
-        new_block = Block(last_mined_block.hash, last_mined_block.idx+1)
+        new_block = Blockchain(last_mined_block.hash, last_mined_block.idx+1)
         if new_block.idx not in chain:
             chain[new_block.idx] = new_block
 
@@ -109,7 +109,7 @@ def main_blockchain():
         st.session_state.chain = {}
         prev={}
         prev['hash']='0000000000000000000000000000000000000000000000000000000000000000'
-        st.session_state.chain[1] = Block(
+        st.session_state.chain[1] = Blockchain(
             prev, 1)
 
     chain = st.session_state.chain
@@ -118,4 +118,4 @@ def main_blockchain():
         chain[i].single_block()
 
     st.sidebar.write(f"Total Blocks: {len(chain)}")
-    st.sidebar.button("Add New Block", on_click=Block.addNewBlock)
+    st.sidebar.button("Add New Blockchain", on_click=Blockchain.addNewBlock)
