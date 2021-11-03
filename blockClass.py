@@ -19,6 +19,7 @@ class Block:
         self.hash = ""
         self.hash_str = ""
         self.flag = False
+        self.mine()
 
     def mine(self):
 
@@ -55,9 +56,7 @@ class Block:
 
 
 
-def block():
-
-    obj = st.session_state.block
+def block(obj):
 
     st.text_input("Block #:",obj.block_no, key='block_no',on_change=obj.touch)
     st.text_input("Nonce:",obj.nonce, key='nonce',on_change=obj.touch)
@@ -83,10 +82,10 @@ def main_block():
     if 'block' not in st.session_state:
         st.session_state.default=[]
         st.session_state.block = Block()
-        st.session_state.block.mine()
+        # st.session_state.block.mine()
 
 
-    block()
+    block(st.session_state.block)
 
 
 if __name__ == "__main__":
