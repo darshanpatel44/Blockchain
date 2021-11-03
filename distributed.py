@@ -23,12 +23,9 @@ def main_distributed():
 
     
     if 'dist_blockchain' not in st.session_state:
-
-        st.write('Chains not present')
         st.session_state.dist_blockchain = DistributedBlockchain()
-    else:
-        st.write('Chains present')
 
+    
     if st.session_state.dist_blockchain.total_chains == 1:
         for i in range(2):
             st.session_state.dist_blockchain.add_chain()
