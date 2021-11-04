@@ -20,9 +20,7 @@ def app():
 
     choice = st.sidebar.radio(
         "",
-        # ("Hash", "Block", "Blockchain", "Distributed Blockchain", "Tokens")
-        ("Distributed Blockchain", "Block", "Hash", "Blockchain", "Tokens")
-        # ("Block", "Distributed Blockchain" , "Hash", "Blockchain", "Tokens")
+        ("Hash", "Block", "Blockchain", "Distributed Blockchain", "Tokens")
     )
     st.sidebar.markdown("""
     ***
