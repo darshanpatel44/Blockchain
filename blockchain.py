@@ -118,6 +118,7 @@ class Blockchain:
         while ptr <= len(self.chain):
             self.chain[ptr].single_block()
             ptr += 1
+        st.sidebar.write(f"Total Blocks: {len(self.chain)}")
         st.sidebar.button("Add New Block", on_click=fName)
 
 
@@ -130,5 +131,4 @@ def main_blockchain():
 
     chain.render_chain(chain.addNewBlock)
 
-    st.sidebar.write(f"Total Blocks: {len(chain.chain)}")
     # st.sidebar.button("Add New Block", on_click=chain.addNewBlock)

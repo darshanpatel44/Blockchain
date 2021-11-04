@@ -20,7 +20,7 @@ def app():
 
     choice = st.sidebar.radio(
         "",
-        ("Hash", "Block", "Blockchain", "Distributed Blockchain", "Tokens")
+        ("Hash", "Block", "Blockchain", "Distributed Blockchain")
     )
     st.sidebar.markdown("""
     ***
@@ -29,11 +29,13 @@ def app():
         st.title('SHA256 Hash')
         st.markdown("""***""")
         main_hash()
+        st.markdown("""***""")
 
     if choice == "Block":
         st.title('Block')
         st.markdown("""***""")
         main_block()
+        st.markdown("""***""")
 
     if choice == "Blockchain":
         st.title('Blockchain')
@@ -44,10 +46,6 @@ def app():
         st.title('Distributed Blockchain')
         st.markdown("""***""")
         main_distributed()
-
-    if choice == "Tokens":
-        st.title('Tokens')
-        st.markdown("""***""")
 
     hide_st_style = """
             <style>
