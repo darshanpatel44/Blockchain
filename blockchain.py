@@ -23,26 +23,26 @@ class Block:
         self.nonce = 4444
         self.data = ""
         self.hash = {}
-        self.hash_str=""
+        self.hash_str = ""
         self.prev = prev
         self.flag = False
         self.mine()
 
-    
     def hasChanged(self):
 
-        text = self.block_no + str(self.nonce) + str(self.data) + str(self.prev['hash'])
+        text = self.block_no + str(self.nonce) + \
+            str(self.data) + str(self.prev['hash'])
 
-        if text==self.hash_str:
-            self.flag=False
+        if text == self.hash_str:
+            self.flag = False
 
         else:
-            self.flag=True
-
+            self.flag = True
 
     def UpdateHash(self):
 
-        hash_str = self.block_no + str(self.nonce) + str(self.data) + str(self.prev['hash'])
+        hash_str = self.block_no + \
+            str(self.nonce) + str(self.data) + str(self.prev['hash'])
         self.hash['hash'] = SHA256(hash_str)
 
     def mine(self):
@@ -54,25 +54,26 @@ class Block:
             if hashh.startswith(prefix_str):
                 self.nonce = nonce
                 self.hash['hash'] = hashh
-                self.hash_str=text
-                self.flag=False
+                self.hash_str = text
+                self.flag = False
                 break
         return
 
-
     def touch(self):
-        self.block_no=st.session_state[f'block_no{self.idx}']
-        self.nonce=st.session_state[f'nonce{self.idx}']
-        self.data=st.session_state[f'data{self.idx}']
-        
+        self.block_no = st.session_state[f'block_no{self.idx}']
+        self.nonce = st.session_state[f'nonce{self.idx}']
+        self.data = st.session_state[f'data{self.idx}']
 
     def single_block(self):
 
-        st.text_input("Block #:", self.block_no, on_change=self.touch, key=f'block_no{self.idx}')
+        st.text_input("Block #:", self.block_no,
+                      on_change=self.touch, key=f'block_no{self.idx}')
 
-        st.text_input("Nonce:", self.nonce, on_change=self.touch, key=f'nonce{self.idx}')
+        st.text_input("Nonce:", self.nonce, on_change=self.touch,
+                      key=f'nonce{self.idx}')
 
-        st.text_area("Data:", self.data, on_change=self.touch, key=f'data{self.idx}')
+        st.text_area("Data:", self.data, on_change=self.touch,
+                     key=f'data{self.idx}')
 
         st.write("Prev:")
         st.info(self.prev['hash'])
@@ -92,35 +93,32 @@ class Block:
         """)
 
 
-
-
 class Blockchain:
 
-    chain_cntr=0
-    prev={}
-    prev['hash']='0000000000000000000000000000000000000000000000000000000000000000'
+    chain_cntr = 0
+    prev = {}
+    prev['hash'] = '0000000000000000000000000000000000000000000000000000000000000000'
 
     def __init__(self):
-        Blockchain.chain_cntr+=1
-        self.idx= Blockchain.chain_cntr
-        self.chain={}
-        self.chain[1]=Block(Blockchain.prev, 1)
-
+        Blockchain.chain_cntr += 1
+        self.idx = Blockchain.chain_cntr
+        self.chain = {}
+        self.chain[1] = Block(Blockchain.prev, 1)
 
     def addNewBlock(self):
         last_mined_block = self.chain[len(self.chain)]
         new_block = Block(last_mined_block.hash, last_mined_block.idx+1)
         if new_block.idx not in self.chain:
-            self.chain[new_block.idx] = new_block        
+            self.chain[new_block.idx] = new_block
 
+    def render_chain(self, fName):
 
-    def render_chain(self):
-        
-        ptr=1
+        ptr = 1
 
-        while ptr<=len(self.chain):
+        while ptr <= len(self.chain):
             self.chain[ptr].single_block()
-            ptr+=1
+            ptr += 1
+        st.sidebar.button("Add New Block", on_click=fName)
 
 
 def main_blockchain():
@@ -130,7 +128,7 @@ def main_blockchain():
 
     chain = st.session_state.chain
 
-    chain.render_chain()
+    chain.render_chain(chain.addNewBlock)
 
     st.sidebar.write(f"Total Blocks: {len(chain.chain)}")
-    st.sidebar.button("Add New Blockchain", on_click=chain.addNewBlock)
+    # st.sidebar.button("Add New Block", on_click=chain.addNewBlock)
