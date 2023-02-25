@@ -1,5 +1,1 @@
-# Blockchain
-
-## Hello World
-
-# Hash
+# Blockchain Visual Demo
